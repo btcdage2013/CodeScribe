@@ -1,81 +1,160 @@
-# CodeScribe
-nextBTC公共铭文工具
-CodeScribe V2.1
-用户使用说明书
-作者: 达哥(@Btcdage)
-2025.9.8
-欢迎使用 nextBTC 公共铭文工具！本工具能让您将任意文本压缩后，安全、高效地“铭刻”到 nextBTC 区块链上，并能通过一个简单的入口轻松读取。它遵循“分层”的比特币哲学，旨在提供一个强大的链上内容发布功能，同时不增加主链的负担。 
-1. 首次运行与环境配置
-在使用本工具前，请确保您的计算机环境已满足以下全部条件：
-1.运行 nextBTC 核心节点：
-您必须已经安装并运行了 nextBTC 核心全节点（nextbtc.rf.gd）。
-确保您的节点已经完全同步了区块链数据，并且处于正在运行的状态。
-2.正确配置 bitcoin.conf 文件：
-在您的 nextBTC 数据目录中，找到 bitcoin.conf 文件。
-确保文件中至少包含以下四行，并取消了注释（即没有 # 开头）：
-server=1
-txindex = 1
-rpcuser=your_rpc_username
-rpcpassword=your_strong_rpc_password
-推荐配置：为了获得最佳的成本估算和交易发送体验，建议您同时设置交易费：
-settxfee=0.0001 
-3.钱包准备：
-您的 nextBTC 节点必须至少创建并加载了一个或多个钱包。
-确保钱包里有足够的 nextBTC，用于支付铭刻时产生的手续费。
-4.初始化设置：
-首次运行本工具时，会弹窗要求您“选择Bitcoin数据文件夹”。请务/必选择您 nextBTC 核心节点的数据目录（即 bitcoin.conf 文件所在的那个目录）。
-选择正确后，程序会自动读取配置并保存，之后启动不再需要此步骤。
-2. ✍铭刻文本 (写入)
-这是将您的思想和数据永久记录到链上的核心功能。
-第 1 步：输入内容
-在“✍️ 铭刻文本”选项卡中，将您想要发布的任意文本粘贴或输入到大的文本框内。
-第 2 步：启动流程与成本确认 (新功能!)
-点击 [开始铭刻流程] 按钮。
-程序会立即对您的文本进行压缩，并计算出需要发送多少笔交易。
-接着，会弹出一个“成本预估与操作确认”对话框。
-请仔细阅读！ 这个对话框会告诉您需要发送的交易数量，以及根据您 bitcoin.conf 中设置的手续费，预估出的总手续费成本。
-点击“是”，才会继续执行后续步骤。
-点击“否”，操作将安全取消，不会产生任何费用。
+# nextBTC Inscription Toolkit | nextBTC 铭文工具套件
 
- 
- 
-第 3 步：钱包解锁（如果需要）
-如果您的钱包设置了密码（这是一个好习惯），在发送交易前必须解锁。
-请打开您的 nextBTC 核心节点图形界面 (Qt 客户端)，在菜单栏选择 “设置” (Settings) -> “解锁钱包” (Unlock Wallet)，并输入您的密码。确保右下角的小锁图标处于“打开”状态。
-第 4 步：自动处理与等待
-确认成本后，程序会自动执行所有后续操作：
-智能钱包扫描：程序会自动遍历您节点上所有已加载的钱包，寻找一个拥有足够“零钱”（UTXO）的钱包来发送交易。
-自动扇出：如果所有钱包的“零钱”都不够，但某个钱包有足够总余额，程序会智能地发起一笔“扇出”交易（把大额钞票换成零钱），并提示您需要等待一个区块确认（约3-10分钟）后重试。
-交易广播：一旦找到合适的钱包，程序会开始逐一发送所有数据分段，并在下方的“操作日志”区域实时显示进度。
- 
-第 5 步：获取您的“铭文钥匙”——定位信息
-当所有分段都成功发送后，日志区会显示一条最重要的信息：
- [区块高度:一长串64位的字符] 
-请务必复制并安全保存这个“铭文定位信息”。这是任何人（包括您自己）未来找到并完整读取这篇铭文的唯一凭证。
-在这个图例中的钥匙就是：
-76469:b83a042e26d14e32bf48da92afa1f4ebb5d57eaf3258dea67e0ec9674cee1e04
-3. 📖 读取铭文 (查询)
-通过一个简单的起始 TXID，即可在链上还原出完整的铭文内容。
-第 1 步：输入起始 TXID
-切换到“📖 读取铭文”选项卡。
-将您想要查询的那个“起始 TXID”粘贴到输入框中。
-第 2 步：查找与还原
-点击 [查找并读取] 按钮。
-程序会自动：
-1.连接到您的节点，获取起始交易。
-2.解析出铭文的“指纹”（协议ID和铭文ID）以及总分段数。
-3.开始从最新区块向前扫描区块链，精确地寻找所有匹配的交易分段。
-4.当所有分段都找齐后，按正确顺序重组，并用 zlib 解压缩。
-第 3 步：查看结果
-“读取结果”区域会显示出完整的铭文内容。
-在内容的最上方，会自动添加一个时间戳 [年-月-日 时:分:秒]，告诉您这篇铭文被创建时的时间（以您的本地时区显示）。
-您可以点击 [复制结果文本] 按钮，程序会自动剥离时间戳，只将最核心的铭文内容复制到您的剪贴板。
- 
-我们也可以在nextBTC官网 上读取这个铭文信息：
-公共铭文浏览器： (https://nextbtc.rf.gd/inscriptionv2.html)
- 
-4. 日志管理
-您在程序中进行的所有操作，无论是铭刻还是读取，其详细日志不仅会显示在界面上，还会被自动记录下来。
-日志文件位于程序所在目录下的 logs 文件夹内。
-日志文件会按天自动分割，例如 250908.log (代表2025年9月8日的日志)。这非常方便您在未来回顾某一天具体发生了什么，或是在遇到问题时进行排查。
-现在，您已经完全掌握了 v2.0 版工具的所有功能。去中心化的世界，从记录您的第一条链上铭文开始！
+Welcome to the nextBTC Inscription Toolkit, a suite of decentralized applications for publishing and reading content on the nextBTC blockchain. This project follows the "layered" Bitcoin philosophy, providing powerful on-chain content capabilities without burdening the main chain.
+
+The toolkit consists of two core components:
+*   **CodeScribe**: The "pen" for writing inscriptions.
+*   **NPIP Inscription Explorer**: The "magnifying glass" for reading them.
+
+Both tools are designed to be completely sovereign, connecting directly to your personal nextBTC full node. This ensures a secure, private, and censorship-resistant experience.
+
+---
+
+欢迎来到 nextBTC 铭文工具套件。这是一套用于在 nextBTC 区块链上发布和读取内容的去中心化应用程序。本项目遵循“分层”的比特币哲学，旨在提供强大的链上内容发布功能，同时不增加主链的负担。
+
+本套件包含两个核心组件：
+*   **CodeScribe**: 用于写入铭文的“笔”。
+*   **NPIP Inscription Explorer**: 用于读取铭文的“放大镜”。
+
+两个工具都被设计为完全主权化，直接连接到您个人的 nextBTC 全节点，确保了整个体验的安全性、私密性和抗审查性。
+
+---
+
+## Core Components |核心组件
+
+### 1. CodeScribe (The Inscriber) | CodeScribe (铭刻工具)
+
+CodeScribe is a powerful desktop tool that allows you to "inscribe" data onto the nextBTC blockchain. It's your gateway to creating permanent, immutable on-chain records.
+
+**Features:**
+*   **Versatile Input**: Inscribe any text or even convert images into detailed ASCII art.
+*   **Intelligent Wallet Management**: Automatically scans all loaded wallets to find one with sufficient funds (UTXOs) for the transaction fees.
+*   **Automatic Fan-Out**: If a wallet has enough balance but lacks small UTXOs, it intelligently creates a "fan-out" transaction to prepare the funds, prompting you to wait for one confirmation.
+*   **Transparent Cost Estimation**: Before any transaction is sent, it provides a clear cost estimate for the entire inscription process.
+*   **Real-Time Logging**: Monitor the entire inscription process through a detailed on-screen log.
+
+---
+
+CodeScribe 是一个功能强大的桌面工具，能让您将任意数据“铭刻”到 nextBTC 区块链上。它是您创建永久、不可篡改的链上记录的入口。
+
+**功能特性：**
+*   **多样化输入**: 支持铭刻任意文本，甚至可以将图片转换为精细的字符画。
+*   **智能钱包管理**: 自动扫描所有已加载的钱包，寻找一个拥有足够“零钱”（UTXO）的钱包来支付手续费。
+*   **自动扇出**: 如果钱包总余额充足但缺少“零钱”，程序会智能地发起一笔“扇出”交易来准备资金，并提示您等待一个区块确认后再试。
+*   **透明的成本预估**: 在发送任何交易之前，程序会提供一个关于整个铭刻流程的总成本预估。
+*   **实时日志**: 通过屏幕上的详细日志，可以监控整个铭刻过程。
+
+### 2. NPIP Inscription Explorer (The Reader) | NPIP 铭文浏览器 (读取工具)
+
+The NPIP Inscription Explorer allows anyone to read and verify inscriptions directly from the blockchain. Using a unique "Inscription Locator," you can retrieve any content inscribed with CodeScribe or a compatible tool.
+
+**Features:**
+*   **Truly Decentralized**: Connects directly to your own node. No third-party APIs or servers.
+*   **Local-First Indexing**: Scans the blockchain and builds a local database for fast and private queries.
+*   **Simple Retrieval**: Just paste the `block_height:txid` locator to find and display the full content.
+*   **Real-Time Syncing**: Automatically watches for new blocks to keep its index up-to-date.
+
+---
+
+NPIP 铭文浏览器允许任何人直接从区块链上读取和验证铭文。使用独一无二的“铭文定位信息”，您可以找回任何由 CodeScribe 或兼容工具铭刻的内容。
+
+**功能特性：**
+*   **真正去中心化**: 直接连接到您自己的节点，不依赖任何第三方 API 或服务器。
+*   **本地优先索引**: 扫描区块链并在本地建立数据库，实现快速、私密的查询。
+*   **轻松读取**: 只需粘贴 `区块高度:交易ID` 格式的定位信息，即可查找并显示完整内容。
+*   **实时同步**: 自动监测新区块，并保持索引实时更新。
+
+## Prerequisites (For Both Tools) | 先决条件 (两个工具通用)
+
+Before using either tool, please ensure your environment meets all the following conditions:
+
+在使用任一工具前，请确保您的计算机环境已满足以下全部条件：
+
+1.  **Run nextBTC Core Node**: You must have the nextBTC Core full node installed and running. Ensure it is fully synchronized with the network.
+
+    **运行 nextBTC 核心节点**: 您必须已经安装并运行了 nextBTC 核心全节点，并确保它已完全同步了区块链数据。
+
+2.  **Configure `bitcoin.conf`**: In your nextBTC data directory, ensure your `bitcoin.conf` file contains the following lines (uncommented):
+
+    **正确配置 `bitcoin.conf` 文件**: 在您的 nextBTC 数据目录中，找到 `bitcoin.conf` 文件，并确保文件中至少包含以下内容 (并且没有被 `#` 注释)：
+    ```ini
+    server=1
+    txindex=1
+    rpcuser=your_rpc_username
+    rpcpassword=your_strong_rpc_password
+    ```
+    *   **Recommendation**: For best results with CodeScribe, also set a default transaction fee: `settxfee=0.0001`
+    *   **重要提示**: 如果您是首次添加 `txindex=1`，您必须使用 `-reindex` 标志重新启动您的 nextBTC 核心节点。
+
+3.  **Wallet Ready**: Your node must have at least one wallet created and loaded, with sufficient nextBTC to cover transaction fees.
+
+    **钱包准备**: 您的 nextBTC 节点必须至少创建并加载了一个钱包，并确保钱包里有足够的 nextBTC 用于支付手续费。
+
+## Installation & Setup | 安装与设置
+
+1.  **Download**: Download the latest releases of `CodeScribe.exe` and `NPIP-INSEXP.exe` from the [Releases](https://github.com/your-username/your-repo/releases) page.
+
+    **下载**: 从本项目的 [Releases](https://github.com/your-username/your-repo/releases) 页面下载 `CodeScribe.exe` 和 `NPIP-INSEXP.exe` 的最新版本。
+
+2.  **Initial Setup (CodeScribe)**: The first time you run `CodeScribe.exe`, a pop-up will ask you to select your "Bitcoin data folder". **You must select the data directory of your nextBTC node** (the folder where `bitcoin.conf` is located). The program will save this path and won't ask again.
+
+    **初始化设置 (CodeScribe)**: 首次运行 `CodeScribe.exe` 时，会弹窗要求您“选择Bitcoin数据文件夹”。**请务必选择您 nextBTC 核心节点的数据目录** (即 `bitcoin.conf` 文件所在的那个目录)。程序会自动保存该路径，之后不再需要此步骤。
+
+3.  **Configure `config.ini` (NPIP Explorer)**: The explorer uses a `config.ini` file. Make sure the `[RPC]` section in this file exactly matches the credentials in your `bitcoin.conf`.
+
+    **配置 `config.ini` (NPIP 浏览器)**: 浏览器使用一个 `config.ini` 文件。请确保文件中的 `[RPC]` 部分与您 `bitcoin.conf` 中的凭据完全一致。
+
+## Usage | 使用方法
+
+### Writing with CodeScribe | 使用 CodeScribe 写入
+
+1.  **Create Content**: In the "✍️ Inscribe Text" tab, either paste your text or use the "Load Image" and "Generate ASCII Art" buttons to create your content.
+
+    **创建内容**: 在“✍️ 铭刻文本”选项卡下，可以直接粘贴文本，或使用 [① 载入图片] 和 [② 生成字符画] 按钮来创建您的内容。
+
+2.  **Start Inscription**: Click the **[Start Inscription Flow]** button. Review the cost estimate and click "Yes" to proceed.
+
+    **开始铭刻**: 点击 **[开始铭刻流程]** 按钮。仔细阅读弹出的成本预估对话框，然后点击“是”继续。
+
+3.  **Unlock Wallet**: If your wallet is encrypted, make sure it is unlocked in the nextBTC-Qt client.
+
+    **解锁钱包**: 如果您的钱包已加密，请确保在 nextBTC-Qt 客户端中解锁它。
+
+4.  **Save the Locator**: The tool will automatically handle the transactions. Once finished, the log will display a critical piece of information: the **Inscription Locator**.
+
+    **保存定位信息**: 工具会自动处理所有交易。完成后，日志区会显示一条最重要的信息：**铭文定位信息**。
+    ```
+    [block_height:a_long_64_character_transaction_id]
+    Example: 76469:b83a042e26d14e32bf48da92afa1f4ebb5d57eaf3258dea67e0ec9674cee1e04
+    ```
+    **Copy and save this locator! It is the only key to retrieving your inscription.**
+
+    **请务必复制并安全保存这个定位信息！这是未来找回这篇铭文的唯一凭证。**
+
+### Reading with NPIP Explorer | 使用 NPIP 浏览器读取
+
+1.  **Launch**: Run `NPIP-INSEXP.exe`. A terminal window will open to show sync progress, and the UI will open in your default browser.
+
+    **启动**: 运行 `NPIP-INSEXP.exe`。一个终端窗口会显示同步进度，同时程序会在您的默认浏览器中打开用户界面。
+
+2.  **Enter Locator**: In the explorer's web interface, paste the full `block_height:txid` locator into the input box.
+
+    **输入定位信息**: 在浏览器的网页界面中，将完整的“区块高度:TXID”信息粘贴到输入框。
+
+3.  **Read Content**: Click the "Find and Read" button. The explorer will retrieve, reassemble, and decompress the data, displaying the original content.
+
+    **读取内容**: 点击 [查找并读取] 按钮。浏览器会自动从链上还原出完整的铭文内容。
+
+---
+
+**Public Web Explorer**: You can also use the official public web explorer to view any known inscription:
+<br>**公共网页浏览器**: 您也可以使用官网的公共浏览器来查看任何已知的铭文：
+[https://nextbtc.rf.gd/inscriptionv2.html](https://nextbtc.rf.gd/inscriptionv2.html)
+
+## Author | 作者
+
+*   **达哥 (@Btcdage)**
+
+Now you are fully equipped to participate in the decentralized world of on-chain data. Start by inscribing your first message!
+
+现在，您已经完全掌握了这套工具。去中心化的世界，从记录您的第一条链上铭文开始！
