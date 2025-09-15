@@ -92,9 +92,9 @@ Before using either tool, please ensure your environment meets all the following
 
 ## Installation & Setup | 安装与设置
 
-1.  **Download**: Download the latest releases of `CodeScribe.exe` and `NPIP-INSEXP.exe` from the [Releases](https://github.com/your-username/your-repo/releases) page.
+1.  **Download**: Download the latest releases of `CodeScribe.exe` and `NPIP-INSEXP.exe` from the [Releases](https://github.com/btcdage2013/CodeScribe/releases) page.
 
-    **下载**: 从本项目的 [Releases](https://github.com/your-username/your-repo/releases) 页面下载 `CodeScribe.exe` 和 `NPIP-INSEXP.exe` 的最新版本。
+    **下载**: 从本项目的 [Releases](https://github.com/btcdage2013/CodeScribe/releases) 页面下载 `CodeScribe.exe` 和 `NPIP-INSEXP.exe` 的最新版本。
 
 2.  **Initial Setup (CodeScribe)**: The first time you run `CodeScribe.exe`, a pop-up will ask you to select your "Bitcoin data folder". **You must select the data directory of your nextBTC node** (the folder where `bitcoin.conf` is located). The program will save this path and won't ask again.
 
